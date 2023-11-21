@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Data</title>
+    <style>
+      /* Add your custom CSS styles here */
+      .crypto-name {
+        font-weight: bold;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 4vmin;
+      }
+
+      .crypto-price {
+        color: green; /* Example style for the price */
+      }
+      #cryptoData {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        text-align: center;
+      }
+      div {
+        border: 1px solid black;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1
+      style="
+        width: 100%;
+        text-align: center;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        color: greenyellow;
+        background-image: url('https://www.freeths.co.uk/wp-content/uploads/2023/06/cryptocurrency-crypto-finance-bitcoin-FTX-EW-Free-AdobeStock_407741497-930x552.jpeg');
+        height: 20vmin;
+        background-position: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      "
+    >
+      Live Data
+    </h1>
+    <div id="cryptoData"></div>
+
+    <script>
+      const apiUrl = "http://localhost:3000/cryptoData";
+
+      async function getCryptoData() {
+        try {
+          const response = await fetch(apiUrl);
+          const data = await response.json();
+
+          if (response.status === 200) {
+            const cryptoData = data.data;
+
+            const cryptoDataContainer = document.getElementById("cryptoData");
+
+            cryptoData.forEach((crypto) => {
+              const cryptoInfo = document.createElement("div");
+
+              const cryptoName = document.createElement("p");
+              cryptoName.textContent = crypto.name;
+              cryptoName.classList.add("crypto-name");
+
+              const cryptoPrice = document.createElement("p");
+              cryptoPrice.textContent = `$${crypto.quote.USD.price.toFixed(2)}`;
+              cryptoPrice.classList.add("crypto-price");
+
+              cryptoInfo.appendChild(cryptoName);
+              cryptoInfo.appendChild(cryptoPrice);
+
+              cryptoDataContainer.appendChild(cryptoInfo);
+            });
+          } else {
+            console.error("Error fetching data:", data.status.error_message);
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+
+      getCryptoData();
+    </script>
+  </body>
+</html>
